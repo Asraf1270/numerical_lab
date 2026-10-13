@@ -53,18 +53,22 @@ contains
 
     subroutine root_finding_menu()
         print*, "Coming soon!"
+        read(*, *)
     end subroutine root_finding_menu
 
     subroutine linear_systems_menu()
         print*, "Coming soon!"
+        read(*, *)
     end subroutine linear_systems_menu
 
     subroutine integration_menu()
         print*, "Coming soon!"
+        read(*, *)
     end subroutine integration_menu
 
     subroutine error_analysis_menu()
         print*, "Coming soon!"
+        read(*, *)
     end subroutine error_analysis_menu
 
     subroutine show_settings()
@@ -75,13 +79,5 @@ contains
         print*, "Press Enter to return to the menu"
         read(*, *)
     end subroutine show_settings
-
-    subroutine not_implemented(method_name)
-        character(len=*), intent(in) :: method_name
-
-        print*
-        print*, trim(method_name)
-        print*, "This method will be implemented in a later step."
-    end subroutine not_implemented
 
 end module menu

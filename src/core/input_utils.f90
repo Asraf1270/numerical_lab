@@ -7,21 +7,22 @@ module input_utils
 contains
 
     integer function read_integer(prompt) result(value)
-        character(len =*), intent(in) :: prompt
-        character (len=100) :: line
+        character(len=*), intent(in) :: prompt
+        character(len=100) :: line
         integer :: ios
 
         do
-            write(*, '(A)', advance = 'no') trim(prompt)
+            write(*, '(A)', advance='no') trim(prompt) // ": "
             read(*, '(A)') line
 
-            read(line, *, iostat = ios) value
+            read(line, *, iostat=ios) value
 
-            if (ios == 0) return
+            if (ios == 0) then
+                return
+            end if
 
-            print*, "Invalid input. please enter an integer"
+            print *, "Invalid input. Please enter an integer."
         end do
-
     end function read_integer
 
 end module input_utils
