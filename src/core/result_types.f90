@@ -95,4 +95,71 @@ module result_types
     end type linear_result
 
 
+    ! ------------------------------------------------
+    ! Nuerical Integration Result
+    ! ------------------------------------------------
+
+    ! Result of a quadrature rule
+
+    type, public :: quad_result
+        real(wp) :: integral = 0.0_wp
+        real(wp) :: estimated_error = -1.0_wp
+        real(wp) :: error_bound = -1.0_wp
+        integer(ik) :: nsub = 0
+        integer(ik) :: status = 0
+        logical :: converged = .false.
+        character(len=:), allocatable :: message
+        character(len=:), allocatable :: method
+        real(wp), allocatable :: panels(:)
+        type(error_info), public :: error
+        type(iter_table) :: table
+    end type quad_result
+    
+    !-----------------------------------------------------
+    ! Public Helper
+    !-----------------------------------------------------
+
+    public :: iter_table_push, iter_table_clear
+
+contains
+
+    ! Append one row to the table, growing the underlying array as needed
+
+    subroutine iter_table_push(self, row)
+        class(iter_table), intent(inout) :: self
+        type(iteration_row), intent(in) :: row
+
+        type(iteration_row), allocatable :: tmp(:)
+        integer :: cap, i 
+
+        if (.not. allocated(self%rows)) then
+            allocate(self%rows(16))
+            self%n = 0
+        end if
+
+        if (self%n >= size(self%rows)) then
+            cap = size(self%rows)
+            allocate (tmp(2 * cap))
+
+            do i = 1, self%n
+                tmp(i) = self%rows(i)
+            end do
+
+            call move_alloc(tmp, self%rows)
+        end if
+
+        self%n = self%n + 1
+        self%rows(self%n) = row
+    end subroutine iter_table_push
+
+
+    ! Reset the table ot empty. The allocated capacity is released
+
+    subroutine iter_table_clear(self)
+        class(iter_table), intent(inout) :: self
+        if (allocated(self%rows)) deallocate (self%rows)
+        self%n = 0
+    end subroutine iter_table_clear
+
+
 end module result_types
